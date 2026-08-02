@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Password Strength Analyzer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🔐 Password Strength Analyzer</h1>
+
+    <p class="subtitle">
+        Check how secure your password is
+    </p>
+
+    <div class="card">
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password">
+
+        <button id="togglePassword">
+
+            👁 Show Password
+
+        </button>
+
+        <h3>Password Strength</h3>
+
+        <div class="strength-bar">
+
+            <div class="strength-fill"></div>
+
+        </div>
+
+        <p id="strengthText">
+
+            Weak
+
+        </p>
+
+        <div class="rules">
+
+            <p>❌ At least 8 characters</p>
+
+            <p>❌ Uppercase letter</p>
+
+            <p>❌ Lowercase letter</p>
+
+            <p>❌ Number</p>
+
+            <p>❌ Special character</p>
+
+        </div>
+
+        <button class="analyze">
+
+            Analyze Password
+
+        </button>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

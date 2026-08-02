@@ -1,0 +1,188 @@
+/* ===== Reset ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== Body ===== */
+
+body {
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f4f7fb;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 100vh;
+
+}
+
+/* ===== Main Container ===== */
+
+.container {
+
+    width: 100%;
+    max-width: 700px;
+
+    padding: 20px;
+
+}
+
+/* ===== Heading ===== */
+
+h1 {
+
+    text-align: center;
+
+    color: #1d4ed8;
+
+    margin-bottom: 10px;
+
+}
+
+.subtitle {
+
+    text-align: center;
+
+    color: #555;
+
+    margin-bottom: 25px;
+
+}
+
+/* ===== Card ===== */
+
+.card {
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,.1);
+
+}
+
+/* ===== Label ===== */
+
+label {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-weight: bold;
+
+}
+
+/* ===== Input ===== */
+
+input {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    margin-bottom: 15px;
+
+}
+
+/* ===== Buttons ===== */
+
+button {
+
+    padding: 12px 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+/* Show Password */
+
+#togglePassword {
+
+    background: #2563eb;
+
+    color: white;
+
+    margin-bottom: 20px;
+
+}
+
+/* Analyze Button */
+
+.analyze {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    background: #16a34a;
+
+    color: white;
+
+    font-weight: bold;
+
+}
+
+/* ===== Strength Bar ===== */
+
+.strength-bar {
+
+    width: 100%;
+
+    height: 12px;
+
+    background: #ddd;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    margin: 15px 0;
+
+}
+
+.strength-fill {
+
+    width: 20%;
+
+    height: 100%;
+
+    background: red;
+
+}
+
+/* ===== Rules ===== */
+
+.rules {
+
+    margin-top: 20px;
+
+}
+
+.rules p {
+
+    margin: 8px 0;
+
+}
