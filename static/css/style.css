@@ -186,3 +186,14 @@ button {
     margin: 8px 0;
 
 }
+/* Score */
+
+#scoreText {
+
+    font-weight: bold;
+
+    margin-top: 10px;
+
+    color: #1d4ed8;
+
+}
