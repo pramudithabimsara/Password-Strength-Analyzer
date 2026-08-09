@@ -129,7 +129,85 @@ def detect_patterns(password):
 # ============================================================
 # CRACK TIME ESTIMATION
 # ============================================================
+def generate_recommendations(password, results):
+    """
+    Generate security recommendations based on
+    password characteristics and detected weaknesses.
+    """
 
+    recommendations = []
+
+    # Password length
+    if results["length"] < 8:
+        recommendations.append(
+            "Use at least 8 characters."
+        )
+
+    elif results["length"] < 12:
+        recommendations.append(
+            "Consider using at least 12 characters."
+        )
+
+    # Character variety
+    if not results["has_uppercase"]:
+        recommendations.append(
+            "Add uppercase letters."
+        )
+
+    if not results["has_lowercase"]:
+        recommendations.append(
+            "Add lowercase letters."
+        )
+
+    if not results["has_number"]:
+        recommendations.append(
+            "Add numbers."
+        )
+
+    if not results["has_special"]:
+        recommendations.append(
+            "Add special characters such as !, @, #, or $."
+        )
+
+    # Common password
+    if results["is_common"]:
+        recommendations.append(
+            "Avoid using common passwords."
+        )
+
+    # Predictable patterns
+    if "Repeated characters" in results["patterns"]:
+        recommendations.append(
+            "Avoid repeating the same character."
+        )
+
+    if "Sequential numbers" in results["patterns"]:
+        recommendations.append(
+            "Avoid sequential numbers such as 1234 or 5678."
+        )
+
+    if "Sequential letters" in results["patterns"]:
+        recommendations.append(
+            "Avoid sequential letters such as abcd."
+        )
+
+    if "Keyboard pattern" in results["patterns"]:
+        recommendations.append(
+            "Avoid keyboard patterns such as qwerty or asdf."
+        )
+
+    if "Year pattern" in results["patterns"]:
+        recommendations.append(
+            "Avoid predictable years such as 2024, 2025, or 2026."
+        )
+
+    # No problems found
+    if not recommendations:
+        recommendations.append(
+            "No obvious security weaknesses detected."
+        )
+
+    return recommendations
 def estimate_crack_time(entropy):
     """
     Estimate brute-force cracking time.
@@ -304,6 +382,11 @@ def analyze_password(password):
 
     results["crack_time"] = estimate_crack_time(
         results["entropy"]
+    )
+
+    results["recommendations"] = generate_recommendations(
+        password,
+        results
     )
 
     return results

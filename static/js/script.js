@@ -36,6 +36,8 @@ const commonPasswordText =
     document.getElementById("commonPasswordText");
     const patternsText =
     document.getElementById("patternsText");
+    const recommendationsText =
+    document.getElementById("recommendationsText");
 const crackTimeText = document.getElementById("crackTimeText");
 // Check password while typing
 passwordInput.addEventListener("input", function () {
@@ -197,7 +199,13 @@ if (result.patterns.length > 0) {
     patternsText.textContent =
         "✅ No obvious predictable patterns detected.";
 }
-
+if (result.recommendations.length > 0) {
+    recommendationsText.innerHTML =
+        "<strong>🔐 Security Recommendations:</strong><br>" +
+        result.recommendations
+            .map(recommendation => `• ${recommendation}`)
+            .join("<br>");
+}
 
     // Update strength
     strengthText.textContent = result.strength;
