@@ -31,6 +31,12 @@ const specialRule = document.getElementById("special");
 const strengthFill = document.querySelector(".strength-fill");
 const strengthText = document.getElementById("strengthText");
 const scoreText = document.getElementById("scoreText");
+const entropyText = document.getElementById("entropyText");
+const commonPasswordText =
+    document.getElementById("commonPasswordText");
+    const patternsText =
+    document.getElementById("patternsText");
+const crackTimeText = document.getElementById("crackTimeText");
 // Check password while typing
 passwordInput.addEventListener("input", function () {
 
@@ -64,7 +70,7 @@ passwordInput.addEventListener("input", function () {
 
     // Number
     if (/[0-9]/.test(password)) {
-        numberRule.textContent = "✅ Number";
+        numberRule.textContent = "✅ Number";//test
         score++;
     } else {
         numberRule.textContent = "❌ Number";
@@ -99,6 +105,129 @@ passwordInput.addEventListener("input", function () {
     } else {
         strengthFill.style.background = "green";
         strengthText.textContent = "Very Strong";
+    }
+
+});
+// Send password to Flask backend
+async function analyzeWithBackend(password) {
+
+    try {
+
+        const response = await fetch("/analyze", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                password: password
+            })
+        });
+
+        const result = await response.json();
+
+        console.log("Backend result:", result);
+
+        return result;
+
+    } catch (error) {
+
+        console.error("Backend error:", error);
+
+    }
+}
+analyzeWithBackend();
+// Analyze button
+const analyzeButton = document.getElementById("analyzeButton");
+
+analyzeButton.addEventListener("click", async function () {
+
+    const password = passwordInput.value;
+
+    if (password === "") {
+        alert("Please enter a password first.");
+        return;
+    }
+
+    const result = await analyzeWithBackend(password);
+
+    if (!result) {
+        return;
+    }
+
+    // Update password rules
+    lengthRule.textContent = result.length >= 8
+        ? "✅ At least 8 characters"
+        : "❌ At least 8 characters";
+
+    upperRule.textContent = result.has_uppercase
+        ? "✅ Uppercase letter"
+        : "❌ Uppercase letter";
+
+    lowerRule.textContent = result.has_lowercase
+        ? "✅ Lowercase letter"
+        : "❌ Lowercase letter";
+
+    numberRule.textContent = result.has_number
+        ? "✅ Number"
+        : "❌ Number";
+
+    specialRule.textContent = result.has_special
+        ? "✅ Special character"
+        : "❌ Special character";
+
+
+    // Update score
+    scoreText.textContent = `Score: ${result.score} / 100`;
+    entropyText.textContent = `Entropy: ${result.entropy} bits`;
+    crackTimeText.textContent =
+    `Estimated crack time: ${result.crack_time}`;
+    if (result.is_common) {
+    commonPasswordText.textContent =
+        "⚠️ Common password detected! Choose a more unique password.";
+} else {
+    commonPasswordText.textContent =
+        "✅ This password was not found in the common password list.";
+}
+if (result.patterns.length > 0) {
+    patternsText.textContent =
+        `⚠️ Predictable patterns: ${result.patterns.join(", ")}`;
+} else {
+    patternsText.textContent =
+        "✅ No obvious predictable patterns detected.";
+}
+
+
+    // Update strength
+    strengthText.textContent = result.strength;
+
+
+    // Update strength bar
+    strengthFill.style.width = result.score + "%";
+
+
+    // Update strength bar color
+    if (result.score <= 20) {
+
+        strengthFill.style.background = "red";
+
+    } else if (result.score <= 40) {
+
+        strengthFill.style.background = "orange";
+
+    } else if (result.score <= 60) {
+
+        strengthFill.style.background = "gold";
+
+    } else if (result.score <= 80) {
+
+        strengthFill.style.background = "yellowgreen";
+
+    } else {
+
+        strengthFill.style.background = "green";
+
     }
 
 });
