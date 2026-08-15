@@ -197,3 +197,25 @@ button {
     color: #1d4ed8;
 
 }
+/* Authentication links */
+
+.auth-links {
+    width: 90%;
+    max-width: 700px;
+    margin: 20px auto 0;
+    text-align: right;
+}
+
+.auth-links a {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.auth-links a:hover {
+    opacity: 0.9;
+}

@@ -17,77 +17,133 @@
 
 <body>
 
-<div class="container">
+    <!-- Authentication Links -->
+    <div class="auth-links">
 
-    <h1>🔐 Password Strength Analyzer</h1>
-
-    <p class="subtitle">
-        Check how secure your password is
-    </p>
-
-    <div class="card">
-
-        <label>Password</label>
-
-        <input
-            type="password"
-            id="password"
-            placeholder="Enter your password">
-
-        <button id="togglePassword">
-
-            👁 Show Password
-
-        </button>
-
-        <h3>Password Strength</h3>
-
-        <div class="strength-bar">
-
-            <div class="strength-fill"></div>
-
-        </div>
-
-<p id="strengthText">
-    Weak
-</p>
-
-<p id="scoreText">
-    Score: 0 / 100
-</p>
-<p id="entropyText">
-    Entropy: 0 bits
-</p>
-<p id="commonPasswordText"></p>
-<p id="patternsText"></p>
-<p id="recommendationsText"></p>
-<p id="crackTimeText">
-    Estimated crack time: -
-</p>
-
-  <div class="rules">
-
-    <p id="length">❌ At least 8 characters</p>
-
-    <p id="uppercase">❌ Uppercase letter</p>
-
-    <p id="lowercase">❌ Lowercase letter</p>
-
-    <p id="number">❌ Number</p>
-
-    <p id="special">❌ Special character</p>
-
-</div>
-
-<button class="analyze" id="analyzeButton">
-    Analyze Password
-</button>
+        <a href="{{ url_for('register') }}">
+            Register
+        </a>
 
     </div>
 
-</div>
 
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <div class="container">
+
+        <h1>🔐 Password Strength Analyzer</h1>
+
+        <p class="subtitle">
+            Check how secure your password is
+        </p>
+
+
+        <div class="card">
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                autocomplete="off"
+            >
+
+
+            <button
+                type="button"
+                id="togglePassword">
+
+                👁 Show Password
+
+            </button>
+
+
+            <h3>
+                Password Strength
+            </h3>
+
+
+            <div class="strength-bar">
+
+                <div class="strength-fill"></div>
+
+            </div>
+
+
+            <p id="strengthText">
+                Weak
+            </p>
+
+
+            <p id="scoreText">
+                Score: 0 / 100
+            </p>
+
+
+            <p id="entropyText">
+                Entropy: 0 bits
+            </p>
+
+
+            <p id="commonPasswordText"></p>
+
+
+            <p id="patternsText"></p>
+
+
+            <p id="recommendationsText"></p>
+
+
+            <p id="crackTimeText">
+                Estimated crack time: -
+            </p>
+
+
+            <!-- Password Rules -->
+
+            <div class="rules">
+
+                <p id="length">
+                    ❌ At least 8 characters
+                </p>
+
+                <p id="uppercase">
+                    ❌ Uppercase letter
+                </p>
+
+                <p id="lowercase">
+                    ❌ Lowercase letter
+                </p>
+
+                <p id="number">
+                    ❌ Number
+                </p>
+
+                <p id="special">
+                    ❌ Special character
+                </p>
+
+            </div>
+
+
+            <!-- Analyze Button -->
+
+            <button
+                type="button"
+                class="analyze"
+                id="analyzeButton">
+
+                Analyze Password
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 
