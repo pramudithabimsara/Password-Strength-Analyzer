@@ -17,51 +17,94 @@
 
 <body>
 
-    <!-- Authentication Links -->
+    <!-- ==============================
+         Authentication Buttons
+         ============================== -->
+
     <div class="auth-links">
 
-        <a href="{{ url_for('register') }}">
-            Register
+        <a href="{{ url_for('login') }}"
+           class="login-btn">
+            🔐 Login
+        </a>
+
+        <a href="{{ url_for('register') }}"
+           class="register-btn">
+            📝 Register
         </a>
 
     </div>
 
 
+    <!-- ==============================
+         Main Container
+         ============================== -->
+
     <div class="container">
 
-        <h1>🔐 Password Strength Analyzer</h1>
+        <div class="hero">
 
-        <p class="subtitle">
-            Check how secure your password is
-        </p>
+            <div class="logo">
+                🔐
+            </div>
+
+            <h1>
+                Password Strength Analyzer
+            </h1>
+
+            <p class="subtitle">
+                Check how secure your password is
+                before using it.
+            </p>
+
+        </div>
 
 
-        <div class="card">
+        <!-- ==============================
+             Analyzer Card
+             ============================== -->
+
+        <div class="card analyzer-card">
 
             <label for="password">
                 Password
             </label>
 
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                autocomplete="off"
-            >
+            <div class="password-input-container">
 
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <!-- Show Password -->
 
             <button
                 type="button"
-                id="togglePassword">
+                id="togglePassword"
+                class="secondary-button">
 
                 👁 Show Password
 
             </button>
 
 
-            <h3>
-                Password Strength
-            </h3>
+            <!-- ==============================
+                 Strength
+                 ============================== -->
+
+            <div class="section-title">
+
+                <h3>
+                    Password Strength
+                </h3>
+
+            </div>
 
 
             <div class="strength-bar">
@@ -71,77 +114,142 @@
             </div>
 
 
-            <p id="strengthText">
-                Weak
-            </p>
+            <div class="strength-result">
 
-
-            <p id="scoreText">
-                Score: 0 / 100
-            </p>
-
-
-            <p id="entropyText">
-                Entropy: 0 bits
-            </p>
-
-
-            <p id="commonPasswordText"></p>
-
-
-            <p id="patternsText"></p>
-
-
-            <p id="recommendationsText"></p>
-
-
-            <p id="crackTimeText">
-                Estimated crack time: -
-            </p>
-
-
-            <!-- Password Rules -->
-
-            <div class="rules">
-
-                <p id="length">
-                    ❌ At least 8 characters
+                <p id="strengthText">
+                    Weak
                 </p>
 
-                <p id="uppercase">
-                    ❌ Uppercase letter
-                </p>
-
-                <p id="lowercase">
-                    ❌ Lowercase letter
-                </p>
-
-                <p id="number">
-                    ❌ Number
-                </p>
-
-                <p id="special">
-                    ❌ Special character
+                <p id="scoreText">
+                    Score: 0 / 100
                 </p>
 
             </div>
 
 
-            <!-- Analyze Button -->
+            <!-- ==============================
+                 Analysis Information
+                 ============================== -->
+
+            <div class="analysis-grid">
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Entropy
+                    </span>
+
+                    <span id="entropyText">
+                        0 bits
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Crack Time
+                    </span>
+
+                    <span id="crackTimeText">
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 Security Results
+                 ============================== -->
+
+            <div class="security-results">
+
+                <p id="commonPasswordText"></p>
+
+                <p id="patternsText"></p>
+
+                <p id="recommendationsText"></p>
+
+            </div>
+
+
+            <!-- ==============================
+                 Password Rules
+                 ============================== -->
+
+            <div class="rules-section">
+
+                <h3>
+                    Password Requirements
+                </h3>
+
+
+                <div class="rules">
+
+                    <p id="length">
+                        ❌ At least 8 characters
+                    </p>
+
+                    <p id="uppercase">
+                        ❌ Uppercase letter
+                    </p>
+
+                    <p id="lowercase">
+                        ❌ Lowercase letter
+                    </p>
+
+                    <p id="number">
+                        ❌ Number
+                    </p>
+
+                    <p id="special">
+                        ❌ Special character
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 Analyze Button
+                 ============================== -->
 
             <button
                 type="button"
                 class="analyze"
                 id="analyzeButton">
 
-                Analyze Password
+                🔍 Analyze Password
 
             </button>
 
         </div>
 
+
+        <!-- ==============================
+             Login Information
+             ============================== -->
+
+        <div class="bottom-message">
+
+            <p>
+                Want to save your passwords securely?
+            </p>
+
+            <a href="{{ url_for('login') }}">
+                Login to Password Manager →
+            </a>
+
+        </div>
+
     </div>
 
+
+    <!-- JavaScript -->
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 

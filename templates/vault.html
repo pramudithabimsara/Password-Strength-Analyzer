@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Password Vault - SecureVault</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="dashboard-body">
+
+<div class="vault-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="vault-header">
+
+        <div class="vault-brand">
+
+            <div class="vault-brand-icon">
+                🔐
+            </div>
+
+            <div>
+
+                <h1>SecureVault</h1>
+
+                <p>Password Manager</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="vault-user">
+
+            <div class="vault-avatar">
+                {{ session["username"][0]|upper }}
+            </div>
+
+            <div>
+
+                <strong>
+                    {{ session["username"] }}
+                </strong>
+
+                <span>
+                    {{ session["role"]|capitalize }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="vault-main">
+
+
+        <!-- PAGE HEADING -->
+
+        <div class="vault-page-heading">
+
+            <div>
+
+                <p class="dashboard-label">
+                    SECURE STORAGE
+                </p>
+
+                <h2>
+                    Password Vault
+                </h2>
+
+                <p>
+                    Securely manage your saved passwords.
+                </p>
+
+            </div>
+
+
+            <a href="{{ url_for('dashboard') }}"
+               class="back-dashboard">
+
+                ← Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             ADD PASSWORD
+             ================================================= -->
+
+        <section class="vault-add-card">
+
+            <div class="vault-section-title">
+
+                <div class="vault-section-icon">
+                    +
+                </div>
+
+                <div>
+
+                    <h2>
+                        Add New Password
+                    </h2>
+
+                    <p>
+                        Store a password securely in your vault.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form method="POST"
+                  action="{{ url_for('add_password') }}"
+                  class="vault-form">
+
+
+                <div class="form-group">
+
+                    <label for="website">
+                        Website
+                    </label>
+
+                    <input
+                        type="text"
+                        id="website"
+                        name="website"
+                        placeholder="e.g. github.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="vault-username">
+                        Username / Email
+                    </label>
+
+                    <input
+                        type="text"
+                        id="vault-username"
+                        name="username"
+                        placeholder="e.g. user@example.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="vault-password">
+                        Password
+                    </label>
+
+                    <div class="vault-password-input">
+
+                        <input
+                            type="password"
+                            id="vault-password"
+                            name="password"
+                            placeholder="Enter password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="toggleAddPassword"
+                            class="input-action">
+
+                            👁
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-password-btn">
+
+                    🔒 Save Password
+
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- =================================================
+             SAVED PASSWORDS
+             ================================================= -->
+
+        <section class="vault-list-section">
+
+
+            <div class="vault-list-header">
+
+                <div>
+
+                    <h2>
+                        Saved Passwords
+                    </h2>
+
+                    <p>
+                        Your encrypted credentials
+                    </p>
+
+                </div>
+
+
+                <div class="vault-search">
+
+                    <span>
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="vaultSearch"
+                        placeholder="Search passwords..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div id="passwordList"
+                 class="password-list">
+
+
+                {% if passwords %}
+
+                    {% for item in passwords %}
+
+                        <article
+                            class="password-card"
+                            data-search="{{ item.website }} {{ item.username }}"
+                            data-id="{{ item.id }}"
+                        >
+
+
+                            <div class="password-card-main">
+
+                                <!-- SMART LOGO -->
+
+                                <div
+                                    class="website-logo smart-website-logo"
+                                    data-website="{{ item.website }}"
+                                >
+
+                                    <span class="default-site-icon">
+                                        🌐
+                                    </span>
+
+                                </div>
+
+
+                                <div class="password-card-info">
+
+                                    <h3>
+                                        {{ item.website }}
+                                    </h3>
+
+                                    <p>
+                                        {{ item.username }}
+                                    </p>
+
+
+                                    <div class="protected-label">
+
+                                        🔒 Encrypted & Protected
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="saved-password-area">
+
+                                <span class="saved-password-label">
+                                    PASSWORD
+                                </span>
+
+
+                                <div class="saved-password-value">
+
+                                    <input
+                                        type="password"
+                                        class="saved-password-input"
+                                        value="••••••••••••••••"
+                                        readonly
+                                    >
+
+
+                                    <button
+                                        type="button"
+                                        class="vault-action show-password-btn"
+                                        data-password-id="{{ item.id }}">
+
+                                        👁
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACTIONS -->
+
+                            <div class="password-card-actions">
+
+
+                                <button
+                                    type="button"
+                                    class="vault-action copy-password-btn"
+                                    data-password-id="{{ item.id }}">
+
+                                    📋 Copy
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="vault-action edit-password-btn"
+                                    data-password-id="{{ item.id }}"
+                                    data-website="{{ item.website }}"
+                                    data-username="{{ item.username }}">
+
+                                    ✏️ Edit
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="vault-action delete-password-btn"
+                                    data-password-id="{{ item.id }}">
+
+                                    🗑 Delete
+
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <div class="empty-vault-large">
+
+                        <div class="empty-vault-icon">
+                            🔑
+                        </div>
+
+                        <h3>
+                            No passwords saved yet
+                        </h3>
+
+                        <p>
+                            Add your first password above
+                            to start building your secure vault.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         AUTHENTICATION MODAL
+         ===================================================== -->
+
+    <div id="authModal"
+         class="modal-overlay"
+         style="display:none;">
+
+        <div class="auth-modal">
+
+            <button
+                type="button"
+                id="closeAuthModal"
+                class="modal-close">
+
+                ×
+
+            </button>
+
+
+            <div class="modal-icon">
+                🔐
+            </div>
+
+
+            <h2>
+                Verify Your Identity
+            </h2>
+
+
+            <p>
+                Enter your Password Manager login password
+                to continue.
+            </p>
+
+
+            <label for="managerPassword">
+                Password Manager Password
+            </label>
+
+
+            <input
+                type="password"
+                id="managerPassword"
+                placeholder="Enter your manager password"
+                autocomplete="current-password"
+            >
+
+
+            <p id="authError"
+               class="modal-error"
+               style="display:none;">
+            </p>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    id="cancelAuth"
+                    class="modal-cancel">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="verifyAuth"
+                    class="modal-verify">
+
+                    Verify
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PASSWORD REVEAL MODAL
+         ===================================================== -->
+
+    <div id="passwordModal"
+         class="modal-overlay"
+         style="display:none;">
+
+        <div class="password-reveal-modal">
+
+            <div class="modal-icon">
+                🔓
+            </div>
+
+
+            <h2>
+                Password Revealed
+            </h2>
+
+
+            <p>
+                Keep your password private.
+            </p>
+
+
+            <div class="revealed-password">
+
+                <span id="revealedPassword">
+                    ••••••••••••••••
+                </span>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    id="copyRevealedPassword"
+                    class="modal-verify">
+
+                    📋 Copy
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="closePasswordModal"
+                    class="modal-cancel">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         EDIT MODAL
+         ===================================================== -->
+
+    <div id="editModal"
+         class="modal-overlay"
+         style="display:none;">
+
+        <div class="auth-modal">
+
+            <button
+                type="button"
+                id="closeEditModal"
+                class="modal-close">
+
+                ×
+
+            </button>
+
+
+            <div class="modal-icon">
+                ✏️
+            </div>
+
+
+            <h2>
+                Edit Password
+            </h2>
+
+
+            <p>
+                Update your saved credentials.
+            </p>
+
+
+            <label for="editWebsite">
+                Website
+            </label>
+
+            <input
+                type="text"
+                id="editWebsite"
+                placeholder="Website"
+            >
+
+
+            <label for="editUsername">
+                Username / Email
+            </label>
+
+            <input
+                type="text"
+                id="editUsername"
+                placeholder="Username"
+            >
+
+
+            <label for="editPassword">
+                New Password
+            </label>
+
+            <input
+                type="password"
+                id="editPassword"
+                placeholder="New password"
+            >
+
+
+            <p id="editError"
+               class="modal-error"
+               style="display:none;">
+            </p>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    id="cancelEdit"
+                    class="modal-cancel">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="saveEdit"
+                    class="modal-verify">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DELETE MODAL
+         ===================================================== -->
+
+    <div id="deleteModal"
+         class="modal-overlay"
+         style="display:none;">
+
+        <div class="auth-modal">
+
+            <div class="modal-icon">
+                🗑️
+            </div>
+
+
+            <h2>
+                Delete Password?
+            </h2>
+
+
+            <p>
+                This action cannot be undone.
+                Enter your Password Manager password
+                to confirm deletion.
+            </p>
+
+
+            <input
+                type="password"
+                id="deletePassword"
+                placeholder="Password Manager password"
+            >
+
+
+            <p id="deleteError"
+               class="modal-error"
+               style="display:none;">
+            </p>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    id="cancelDelete"
+                    class="modal-cancel">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="confirmDelete"
+                    class="modal-verify">
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   50 WEBSITE / APP LOGO DATABASE
+   ===================================================== */
+
+const websiteLogos = [
+
+    /* Social Media */
+
+    {
+        names: ["facebook", "fb", "facebook.com"],
+        icon: "facebook",
+        title: "Facebook"
+    },
+
+    {
+        names: ["instagram", "ig", "instagram.com"],
+        icon: "instagram",
+        title: "Instagram"
+    },
+
+    {
+        names: ["whatsapp", "wa", "whatsapp.com"],
+        icon: "whatsapp",
+        title: "WhatsApp"
+    },
+
+    {
+        names: ["twitter", "x.com", "twitter.com"],
+        icon: "x",
+        title: "X"
+    },
+
+    {
+        names: ["tiktok", "tiktok.com"],
+        icon: "tiktok",
+        title: "TikTok"
+    },
+
+    {
+        names: ["reddit", "reddit.com"],
+        icon: "reddit",
+        title: "Reddit"
+    },
+
+    {
+        names: ["snapchat", "snapchat.com"],
+        icon: "snapchat",
+        title: "Snapchat"
+    },
+
+    {
+        names: ["pinterest", "pinterest.com"],
+        icon: "pinterest",
+        title: "Pinterest"
+    },
+
+    {
+        names: ["linkedin", "linkedin.com"],
+        icon: "linkedin",
+        title: "LinkedIn"
+    },
+
+    {
+        names: ["telegram", "telegram.org", "t.me"],
+        icon: "telegram",
+        title: "Telegram"
+    },
+
+
+    /* Development / Cyber Security */
+
+    {
+        names: ["github", "github.com"],
+        icon: "github",
+        title: "GitHub"
+    },
+
+    {
+        names: ["gitlab", "gitlab.com"],
+        icon: "gitlab",
+        title: "GitLab"
+    },
+
+    {
+        names: ["bitbucket", "bitbucket.org"],
+        icon: "bitbucket",
+        title: "Bitbucket"
+    },
+
+    {
+        names: [
+            "stackoverflow",
+            "stack overflow",
+            "stackoverflow.com"
+        ],
+        icon: "stackoverflow",
+        title: "Stack Overflow"
+    },
+
+    {
+        names: [
+            "tryhackme",
+            "try hack me",
+            "tryhackme.com"
+        ],
+        icon: "tryhackme",
+        title: "TryHackMe"
+    },
+
+    {
+        names: [
+            "hackthebox",
+            "hack the box",
+            "htb",
+            "hackthebox.com"
+        ],
+        icon: "hackthebox",
+        title: "Hack The Box"
+    },
+
+    {
+        names: ["docker", "docker.com"],
+        icon: "docker",
+        title: "Docker"
+    },
+
+    {
+        names: ["cloudflare", "cloudflare.com"],
+        icon: "cloudflare",
+        title: "Cloudflare"
+    },
+
+
+    /* Google */
+
+    {
+        names: ["google", "google.com"],
+        icon: "google",
+        title: "Google"
+    },
+
+    {
+        names: [
+            "gmail",
+            "gmail.com",
+            "mail.google.com"
+        ],
+        icon: "gmail",
+        title: "Gmail"
+    },
+
+    {
+        names: ["youtube", "youtube.com"],
+        icon: "youtube",
+        title: "YouTube"
+    },
+
+    {
+        names: [
+            "google drive",
+            "drive.google.com"
+        ],
+        icon: "googledrive",
+        title: "Google Drive"
+    },
+
+
+    /* Microsoft */
+
+    {
+        names: ["microsoft", "microsoft.com"],
+        icon: "microsoft",
+        title: "Microsoft"
+    },
+
+    {
+        names: ["outlook", "outlook.com"],
+        icon: "microsoftoutlook",
+        title: "Outlook"
+    },
+
+    {
+        names: [
+            "onedrive",
+            "one drive",
+            "onedrive.com"
+        ],
+        icon: "microsoftonedrive",
+        title: "OneDrive"
+    },
+
+    {
+        names: [
+            "azure",
+            "azure.com",
+            "portal.azure.com"
+        ],
+        icon: "microsoftazure",
+        title: "Microsoft Azure"
+    },
+
+
+    /* Apple */
+
+    {
+        names: ["apple", "apple.com"],
+        icon: "apple",
+        title: "Apple"
+    },
+
+    {
+        names: ["icloud", "icloud.com"],
+        icon: "icloud",
+        title: "iCloud"
+    },
+
+
+    /* Entertainment */
+
+    {
+        names: ["spotify", "spotify.com"],
+        icon: "spotify",
+        title: "Spotify"
+    },
+
+    {
+        names: ["netflix", "netflix.com"],
+        icon: "netflix",
+        title: "Netflix"
+    },
+
+    {
+        names: ["twitch", "twitch.tv"],
+        icon: "twitch",
+        title: "Twitch"
+    },
+
+    {
+        names: [
+            "steam",
+            "steampowered.com",
+            "steamcommunity.com"
+        ],
+        icon: "steam",
+        title: "Steam"
+    },
+
+    {
+        names: [
+            "epic games",
+            "epicgames",
+            "epicgames.com"
+        ],
+        icon: "epicgames",
+        title: "Epic Games"
+    },
+
+
+    /* Work / Productivity */
+
+    {
+        names: ["discord", "discord.com"],
+        icon: "discord",
+        title: "Discord"
+    },
+
+    {
+        names: ["slack", "slack.com"],
+        icon: "slack",
+        title: "Slack"
+    },
+
+    {
+        names: ["zoom", "zoom.us"],
+        icon: "zoom",
+        title: "Zoom"
+    },
+
+    {
+        names: ["notion", "notion.so"],
+        icon: "notion",
+        title: "Notion"
+    },
+
+    {
+        names: ["canva", "canva.com"],
+        icon: "canva",
+        title: "Canva"
+    },
+
+    {
+        names: ["dropbox", "dropbox.com"],
+        icon: "dropbox",
+        title: "Dropbox"
+    },
+
+
+    /* Shopping / Payments */
+
+    {
+        names: ["amazon", "amazon.com"],
+        icon: "amazon",
+        title: "Amazon"
+    },
+
+    {
+        names: ["ebay", "ebay.com"],
+        icon: "ebay",
+        title: "eBay"
+    },
+
+    {
+        names: ["paypal", "paypal.com"],
+        icon: "paypal",
+        title: "PayPal"
+    },
+
+
+    /* Education */
+
+    {
+        names: ["coursera", "coursera.org"],
+        icon: "coursera",
+        title: "Coursera"
+    },
+
+    {
+        names: ["udemy", "udemy.com"],
+        icon: "udemy",
+        title: "Udemy"
+    },
+
+    {
+        names: ["medium", "medium.com"],
+        icon: "medium",
+        title: "Medium"
+    },
+
+    {
+        names: ["quora", "quora.com"],
+        icon: "quora",
+        title: "Quora"
+    },
+
+
+    /* AI */
+
+    {
+        names: [
+            "chatgpt",
+            "chat.openai.com",
+            "chatgpt.com"
+        ],
+        icon: "openai",
+        title: "ChatGPT"
+    },
+
+    {
+        names: ["openai", "openai.com"],
+        icon: "openai",
+        title: "OpenAI"
+    },
+
+
+    /* Cloud */
+
+    {
+        names: [
+            "aws",
+            "amazon web services",
+            "aws.amazon.com"
+        ],
+        icon: "amazonwebservices",
+        title: "AWS"
+    },
+
+
+    /* Email */
+
+    {
+        names: [
+            "proton",
+            "protonmail",
+            "proton.me",
+            "protonmail.com"
+        ],
+        icon: "protonmail",
+        title: "Proton Mail"
+    }
+
+];
+
+
+/* =====================================================
+   FIND WEBSITE LOGO
+   ===================================================== */
+
+function findWebsiteLogo(website) {
+
+    const value = website
+        .toLowerCase()
+        .trim()
+        .replace(/^https?:\/\//, "")
+        .replace(/^www\./, "")
+        .replace(/\/$/, "");
+
+
+    for (const service of websiteLogos) {
+
+        const found = service.names.some(
+            function(name) {
+
+                const cleanName =
+                    name.toLowerCase();
+
+                return (
+                    value === cleanName ||
+                    value.startsWith(
+                        cleanName + "/"
+                    ) ||
+                    value.includes(cleanName)
+                );
+
+            }
+        );
+
+
+        if (found) {
+
+            return service;
+
+        }
+
+    }
+
+
+    return null;
+}
+
+
+/* =====================================================
+   LOAD WEBSITE LOGOS
+   ===================================================== */
+
+document.querySelectorAll(
+    ".smart-website-logo"
+).forEach(
+    function(container) {
+
+        const website =
+            container.dataset.website;
+
+        const service =
+            findWebsiteLogo(website);
+
+
+        if (!service) {
+
+            container.title = website;
+
+            return;
+        }
+
+
+        const image =
+            document.createElement("img");
+
+
+        image.src =
+            `https://cdn.simpleicons.org/${service.icon}`;
+
+        image.alt =
+            service.title + " logo";
+
+        image.title =
+            service.title;
+
+        image.loading =
+            "lazy";
+
+
+        image.onerror =
+            function() {
+
+                container.innerHTML =
+                    '<span class="default-site-icon">🌐</span>';
+
+            };
+
+
+        container.innerHTML = "";
+
+        container.appendChild(image);
+
+    }
+);
+
+
+/* =====================================================
+   VARIABLES
+   ===================================================== */
+
+let selectedPasswordId = null;
+let currentAction = null;
+let currentDecryptedPassword = null;
+
+
+const authModal =
+    document.getElementById("authModal");
+
+const passwordModal =
+    document.getElementById("passwordModal");
+
+const editModal =
+    document.getElementById("editModal");
+
+const deleteModal =
+    document.getElementById("deleteModal");
+
+
+/* =====================================================
+   AUTHENTICATION MODAL
+   ===================================================== */
+
+function openAuthModal(
+    passwordId,
+    action
+) {
+
+    selectedPasswordId =
+        passwordId;
+
+    currentAction =
+        action;
+
+
+    document.getElementById(
+        "managerPassword"
+    ).value = "";
+
+
+    document.getElementById(
+        "authError"
+    ).style.display =
+        "none";
+
+
+    authModal.style.display =
+        "flex";
+
+
+    setTimeout(
+        function() {
+
+            document.getElementById(
+                "managerPassword"
+            ).focus();
+
+        },
+        100
+    );
+
+}
+
+
+function closeAuthModal() {
+
+    authModal.style.display =
+        "none";
+
+    document.getElementById(
+        "managerPassword"
+    ).value = "";
+
+}
+
+
+/* =====================================================
+   SHOW PASSWORD
+   ===================================================== */
+
+document.querySelectorAll(
+    ".show-password-btn"
+).forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                openAuthModal(
+                    button.dataset.passwordId,
+                    "show"
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   COPY PASSWORD
+   ===================================================== */
+
+document.querySelectorAll(
+    ".copy-password-btn"
+).forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                openAuthModal(
+                    button.dataset.passwordId,
+                    "copy"
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   EDIT
+   ===================================================== */
+
+document.querySelectorAll(
+    ".edit-password-btn"
+).forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                selectedPasswordId =
+                    button.dataset.passwordId;
+
+
+                document.getElementById(
+                    "editWebsite"
+                ).value =
+                    button.dataset.website;
+
+
+                document.getElementById(
+                    "editUsername"
+                ).value =
+                    button.dataset.username;
+
+
+                document.getElementById(
+                    "editPassword"
+                ).value = "";
+
+
+                document.getElementById(
+                    "editError"
+                ).style.display =
+                    "none";
+
+
+                editModal.style.display =
+                    "flex";
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   SAVE EDIT
+   ===================================================== */
+
+document.getElementById(
+    "saveEdit"
+).addEventListener(
+    "click",
+    function() {
+
+        const website =
+            document.getElementById(
+                "editWebsite"
+            ).value.trim();
+
+
+        const username =
+            document.getElementById(
+                "editUsername"
+            ).value.trim();
+
+
+        const password =
+            document.getElementById(
+                "editPassword"
+            ).value;
+
+
+        if (
+            !website ||
+            !username ||
+            !password
+        ) {
+
+            const error =
+                document.getElementById(
+                    "editError"
+                );
+
+
+            error.textContent =
+                "All fields are required.";
+
+
+            error.style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        editModal.style.display =
+            "none";
+
+
+        openAuthModal(
+            selectedPasswordId,
+            "edit"
+        );
+
+    }
+);
+
+
+/* =====================================================
+   DELETE
+   ===================================================== */
+
+document.querySelectorAll(
+    ".delete-password-btn"
+).forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                selectedPasswordId =
+                    button.dataset.passwordId;
+
+
+                document.getElementById(
+                    "deletePassword"
+                ).value = "";
+
+
+                document.getElementById(
+                    "deleteError"
+                ).style.display =
+                    "none";
+
+
+                deleteModal.style.display =
+                    "flex";
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   VERIFY AUTHENTICATION
+   ===================================================== */
+
+document.getElementById(
+    "verifyAuth"
+).addEventListener(
+    "click",
+    async function() {
+
+        const managerPassword =
+            document.getElementById(
+                "managerPassword"
+            ).value;
+
+
+        if (!managerPassword) {
+
+            const error =
+                document.getElementById(
+                    "authError"
+                );
+
+
+            error.textContent =
+                "Please enter your Password Manager password.";
+
+
+            error.style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           EDIT
+           ================================================= */
+
+        if (
+            currentAction === "edit"
+        ) {
+
+            const website =
+                document.getElementById(
+                    "editWebsite"
+                ).value.trim();
+
+
+            const username =
+                document.getElementById(
+                    "editUsername"
+                ).value.trim();
+
+
+            const newPassword =
+                document.getElementById(
+                    "editPassword"
+                ).value;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/edit-password/${selectedPasswordId}`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                auth_password:
+                                    managerPassword,
+
+                                website:
+                                    website,
+
+                                username:
+                                    username,
+
+                                new_password:
+                                    newPassword
+
+                            })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+
+                    const error =
+                        document.getElementById(
+                            "authError"
+                        );
+
+
+                    error.textContent =
+                        result.error ||
+                        "Authentication failed.";
+
+
+                    error.style.display =
+                        "block";
+
+
+                    return;
+
+                }
+
+
+                closeAuthModal();
+
+
+                alert(
+                    "Password updated successfully."
+                );
+
+
+                location.reload();
+
+
+                return;
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                const errorElement =
+                    document.getElementById(
+                        "authError"
+                    );
+
+
+                errorElement.textContent =
+                    "Unable to update password.";
+
+
+                errorElement.style.display =
+                    "block";
+
+                return;
+            }
+
+        }
+
+
+        /* =================================================
+           SHOW / COPY
+           ================================================= */
+
+        try {
+
+            const response =
+                await fetch(
+                    `/authenticate-vault/${selectedPasswordId}`,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            auth_password:
+                                managerPassword
+
+                        })
+
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                const error =
+                    document.getElementById(
+                        "authError"
+                    );
+
+
+                error.textContent =
+                    result.error ||
+                    "Authentication failed.";
+
+
+                error.style.display =
+                    "block";
+
+
+                return;
+
+            }
+
+
+            currentDecryptedPassword =
+                result.password;
+
+
+            closeAuthModal();
+
+
+            /* COPY */
+
+            if (
+                currentAction === "copy"
+            ) {
+
+                try {
+
+                    await navigator.clipboard.writeText(
+                        currentDecryptedPassword
+                    );
+
+
+                    alert(
+                        "Password copied to clipboard."
+                    );
+
+                } catch (error) {
+
+                    alert(
+                        "Unable to copy password."
+                    );
+
+                }
+
+
+                currentDecryptedPassword =
+                    null;
+
+
+                selectedPasswordId =
+                    null;
+
+
+                return;
+
+            }
+
+
+            /* SHOW */
+
+            document.getElementById(
+                "revealedPassword"
+            ).textContent =
+                currentDecryptedPassword;
+
+
+            passwordModal.style.display =
+                "flex";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            const errorElement =
+                document.getElementById(
+                    "authError"
+                );
+
+
+            errorElement.textContent =
+                "Unable to authenticate.";
+
+
+            errorElement.style.display =
+                "block";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   DELETE CONFIRMATION
+   ===================================================== */
+
+document.getElementById(
+    "confirmDelete"
+).addEventListener(
+    "click",
+    async function() {
+
+        const managerPassword =
+            document.getElementById(
+                "deletePassword"
+            ).value;
+
+
+        if (!managerPassword) {
+
+            const error =
+                document.getElementById(
+                    "deleteError"
+                );
+
+
+            error.textContent =
+                "Enter your Password Manager password.";
+
+
+            error.style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/delete-password/${selectedPasswordId}`,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            auth_password:
+                                managerPassword
+
+                        })
+
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                const error =
+                    document.getElementById(
+                        "deleteError"
+                    );
+
+
+                error.textContent =
+                    result.error ||
+                    "Unable to delete password.";
+
+
+                error.style.display =
+                    "block";
+
+
+                return;
+
+            }
+
+
+            deleteModal.style.display =
+                "none";
+
+
+            alert(
+                "Password deleted successfully."
+            );
+
+
+            location.reload();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            const errorElement =
+                document.getElementById(
+                    "deleteError"
+                );
+
+
+            errorElement.textContent =
+                "Unable to delete password.";
+
+
+            errorElement.style.display =
+                "block";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CLOSE MODALS
+   ===================================================== */
+
+document.getElementById(
+    "closeAuthModal"
+).addEventListener(
+    "click",
+    closeAuthModal
+);
+
+
+document.getElementById(
+    "cancelAuth"
+).addEventListener(
+    "click",
+    closeAuthModal
+);
+
+
+document.getElementById(
+    "closePasswordModal"
+).addEventListener(
+    "click",
+    function() {
+
+        passwordModal.style.display =
+            "none";
+
+
+        currentDecryptedPassword =
+            null;
+
+
+        document.getElementById(
+            "revealedPassword"
+        ).textContent =
+            "••••••••••••••••";
+
+    }
+);
+
+
+document.getElementById(
+    "closeEditModal"
+).addEventListener(
+    "click",
+    function() {
+
+        editModal.style.display =
+            "none";
+
+    }
+);
+
+
+document.getElementById(
+    "cancelEdit"
+).addEventListener(
+    "click",
+    function() {
+
+        editModal.style.display =
+            "none";
+
+    }
+);
+
+
+document.getElementById(
+    "cancelDelete"
+).addEventListener(
+    "click",
+    function() {
+
+        deleteModal.style.display =
+            "none";
+
+    }
+);
+
+
+/* =====================================================
+   COPY REVEALED PASSWORD
+   ===================================================== */
+
+document.getElementById(
+    "copyRevealedPassword"
+).addEventListener(
+    "click",
+    async function() {
+
+        if (!currentDecryptedPassword) {
+            return;
+        }
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                currentDecryptedPassword
+            );
+
+
+            alert(
+                "Password copied to clipboard."
+            );
+
+
+        } catch (error) {
+
+            alert(
+                "Unable to copy password."
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   ADD PASSWORD SHOW / HIDE
+   ===================================================== */
+
+const addPasswordInput =
+    document.getElementById(
+        "vault-password"
+    );
+
+
+const toggleAddPassword =
+    document.getElementById(
+        "toggleAddPassword"
+    );
+
+
+if (
+    addPasswordInput &&
+    toggleAddPassword
+) {
+
+    toggleAddPassword.addEventListener(
+        "click",
+        function() {
+
+            if (
+                addPasswordInput.type ===
+                "password"
+            ) {
+
+                addPasswordInput.type =
+                    "text";
+
+
+                toggleAddPassword.textContent =
+                    "🙈";
+
+            } else {
+
+                addPasswordInput.type =
+                    "password";
+
+
+                toggleAddPassword.textContent =
+                    "👁";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH
+   ===================================================== */
+
+const vaultSearch =
+    document.getElementById(
+        "vaultSearch"
+    );
+
+
+if (vaultSearch) {
+
+    vaultSearch.addEventListener(
+        "input",
+        function() {
+
+            const searchValue =
+                vaultSearch.value
+                    .toLowerCase()
+                    .trim();
+
+
+            document.querySelectorAll(
+                ".password-card"
+            ).forEach(
+                function(card) {
+
+                    const searchableText =
+                        card.dataset.search
+                            .toLowerCase();
+
+
+                    if (
+                        searchableText.includes(
+                            searchValue
+                        )
+                    ) {
+
+                        card.style.display =
+                            "";
+
+                    } else {
+
+                        card.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ENTER KEY FOR AUTHENTICATION
+   ===================================================== */
+
+document.getElementById(
+    "managerPassword"
+).addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            document.getElementById(
+                "verifyAuth"
+            ).click();
+
+        }
+
+    }
+);
+
+</script>
+<div id="sessionWarning"
+     style="display:none;">
+
+    ⚠️ Your session will lock in
+    <strong id="sessionCountdown">30</strong>
+    seconds due to inactivity.
+
+</div>
+
+<script>
+
+const SESSION_TIMEOUT = 120;
+const WARNING_TIME = 30;
+
+let lastActivity = Date.now();
+
+const warningBox =
+    document.getElementById("sessionWarning");
+
+const countdown =
+    document.getElementById("sessionCountdown");
+
+
+function resetActivity() {
+
+    lastActivity = Date.now();
+
+    if (warningBox) {
+
+        warningBox.style.display =
+            "none";
+
+    }
+
+}
+
+
+["click", "keydown", "mousemove", "scroll", "touchstart"]
+.forEach(function(eventName) {
+
+    document.addEventListener(
+        eventName,
+        resetActivity,
+        { passive: true }
+    );
+
+});
+
+
+setInterval(function() {
+
+    const inactiveSeconds =
+        Math.floor(
+            (Date.now() - lastActivity) / 1000
+        );
+
+
+    const remaining =
+        SESSION_TIMEOUT - inactiveSeconds;
+
+
+    if (
+        remaining <= WARNING_TIME &&
+        remaining > 0
+    ) {
+
+        if (warningBox) {
+
+            warningBox.style.display =
+                "block";
+
+        }
+
+
+        if (countdown) {
+
+            countdown.textContent =
+                remaining;
+
+        }
+
+    }
+
+
+    if (remaining <= 0) {
+
+        window.location.href =
+            "/login?expired=1";
+
+    }
+
+}, 1000);
+
+</script>
+
+</body>
+</html>

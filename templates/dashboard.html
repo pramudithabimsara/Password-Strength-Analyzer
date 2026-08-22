@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - SecureVault</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🔐
+            </div>
+
+            <div>
+
+                <h2>
+                    SecureVault
+                </h2>
+
+                <span>
+                    Password Manager
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-item active">
+
+                <span>🏠</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('vault') }}"
+               class="nav-item">
+
+                <span>🔑</span>
+
+                Password Vault
+
+            </a>
+
+
+            <a href="{{ url_for('index') }}"
+               class="nav-item">
+
+                <span>🛡️</span>
+
+                Password Analyzer
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="user-mini">
+
+                <div class="avatar">
+
+                    {{ session["username"][0]|upper }}
+
+                </div>
+
+
+                <div class="user-mini-info">
+
+                    <strong>
+
+                        {{ session["username"] }}
+
+                    </strong>
+
+                    <span>
+
+                        {{ session["role"]|capitalize }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <a href="{{ url_for('logout') }}"
+               class="logout-link">
+
+                🚪 Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <p class="dashboard-label">
+                    PASSWORD MANAGER
+                </p>
+
+
+                <h1>
+
+                    Welcome back,
+                    {{ session["username"] }} 👋
+
+                </h1>
+
+
+                <p class="dashboard-subtitle">
+
+                    Manage your passwords securely from one place.
+
+                </p>
+
+            </div>
+
+
+            <div class="header-actions">
+
+                <a href="{{ url_for('vault') }}"
+                   class="add-password-btn">
+
+                    + Add Password
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             STATISTICS
+             ================================================= -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+
+                    🔑
+
+                </div>
+
+
+                <div>
+
+                    <span class="stat-label">
+
+                        Saved Passwords
+
+                    </span>
+
+
+                    <strong class="stat-number">
+
+                        {{ password_count }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+
+                    🛡️
+
+                </div>
+
+
+                <div>
+
+                    <span class="stat-label">
+
+                        Account Status
+
+                    </span>
+
+
+                    <strong class="stat-status">
+
+                        Protected
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon purple">
+
+                    👤
+
+                </div>
+
+
+                <div>
+
+                    <span class="stat-label">
+
+                        Account Role
+
+                    </span>
+
+
+                    <strong class="stat-status">
+
+                        {{ session["role"]|capitalize }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             MAIN GRID
+             ================================================= -->
+
+        <section class="dashboard-grid">
+
+
+            <!-- =================================================
+                 VAULT CARD
+                 ================================================= -->
+
+            <div class="dashboard-card vault-overview">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-icon">
+
+                            🔐
+
+                        </span>
+
+
+                        <div>
+
+                            <h2>
+
+                                Password Vault
+
+                            </h2>
+
+
+                            <p>
+
+                                Your encrypted password storage
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a href="{{ url_for('vault') }}"
+                       class="view-link">
+
+                        View Vault →
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     RECENT PASSWORDS
+                     ================================================= -->
+
+                <div class="vault-preview">
+
+                    {% if recent_passwords %}
+
+                        {% for item in recent_passwords %}
+
+                            <div class="password-preview">
+
+
+                                <!-- SMART WEBSITE LOGO -->
+
+                                <div
+                                    class="website-icon smart-dashboard-logo"
+                                    data-website="{{ item.website }}"
+                                >
+
+                                    <span class="default-site-icon">
+
+                                        🌐
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <div class="password-info">
+
+                                    <strong>
+
+                                        {{ item.website }}
+
+                                    </strong>
+
+
+                                    <span>
+
+                                        {{ item.username }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <span class="protected-badge">
+
+                                    🔒 Protected
+
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+                        <div class="empty-vault">
+
+                            <div class="empty-icon">
+
+                                🔑
+
+                            </div>
+
+
+                            <h3>
+
+                                Your vault is empty
+
+                            </h3>
+
+
+                            <p>
+
+                                Add your first password
+                                to start using SecureVault.
+
+                            </p>
+
+
+                            <a href="{{ url_for('vault') }}"
+                               class="empty-action">
+
+                                + Add Your First Password
+
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SECURITY CARD
+                 ================================================= -->
+
+            <div class="dashboard-card security-card">
+
+
+                <div class="security-heading">
+
+                    <div class="security-shield">
+
+                        🛡️
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+
+                            Security Center
+
+                        </h2>
+
+
+                        <p>
+
+                            Your account security
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="security-status">
+
+                    <div class="status-circle">
+
+                        ✓
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            Account Protected
+
+                        </strong>
+
+
+                        <p>
+
+                            Your account is secured
+                            with password hashing.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="security-feature">
+
+                    <span>
+
+                        🔒
+
+                    </span>
+
+
+                    <div>
+
+                        <strong>
+
+                            Encrypted Vault
+
+                        </strong>
+
+
+                        <p>
+
+                            Stored passwords are encrypted.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="security-feature">
+
+                    <span>
+
+                        🔐
+
+                    </span>
+
+
+                    <div>
+
+                        <strong>
+
+                            Secure Authentication
+
+                        </strong>
+
+
+                        <p>
+
+                            Your login password is securely hashed.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+             ================================================= -->
+
+        <section class="quick-section">
+
+            <h2>
+
+                Quick Actions
+
+            </h2>
+
+
+            <div class="quick-grid">
+
+
+                <a href="{{ url_for('vault') }}"
+                   class="quick-card">
+
+
+                    <div class="quick-icon blue">
+
+                        🔑
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            Password Vault
+
+                        </strong>
+
+
+                        <p>
+
+                            View and manage saved passwords
+
+                        </p>
+
+                    </div>
+
+
+                    <span class="arrow">
+
+                        →
+
+                    </span>
+
+                </a>
+
+
+
+                <a href="{{ url_for('index') }}"
+                   class="quick-card">
+
+
+                    <div class="quick-icon green">
+
+                        🛡️
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            Analyze Password
+
+                        </strong>
+
+
+                        <p>
+
+                            Check password strength and security
+
+                        </p>
+
+                    </div>
+
+
+                    <span class="arrow">
+
+                        →
+
+                    </span>
+
+                </a>
+
+
+
+                <a href="{{ url_for('logout') }}"
+                   class="quick-card">
+
+
+                    <div class="quick-icon red">
+
+                        🚪
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            Logout
+
+                        </strong>
+
+
+                        <p>
+
+                            Securely sign out of your account
+
+                        </p>
+
+                    </div>
+
+
+                    <span class="arrow">
+
+                        →
+
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <footer class="dashboard-footer">
+
+            <span>
+
+                🔐 SecureVault
+
+            </span>
+
+
+            <span>
+
+                Your passwords. Your privacy.
+
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     DASHBOARD LOGO SCRIPT
+     ===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   WEBSITE LOGO DATABASE
+   ===================================================== */
+
+const websiteLogos = [
+
+    /* Social Media */
+
+    {
+        names: ["facebook", "fb", "facebook.com"],
+        icon: "facebook",
+        title: "Facebook"
+    },
+
+    {
+        names: ["instagram", "ig", "instagram.com"],
+        icon: "instagram",
+        title: "Instagram"
+    },
+
+    {
+        names: ["whatsapp", "wa", "whatsapp.com"],
+        icon: "whatsapp",
+        title: "WhatsApp"
+    },
+
+    {
+        names: ["twitter", "twitter.com", "x.com"],
+        icon: "x",
+        title: "X"
+    },
+
+    {
+        names: ["tiktok", "tiktok.com"],
+        icon: "tiktok",
+        title: "TikTok"
+    },
+
+    {
+        names: ["reddit", "reddit.com"],
+        icon: "reddit",
+        title: "Reddit"
+    },
+
+    {
+        names: ["snapchat", "snapchat.com"],
+        icon: "snapchat",
+        title: "Snapchat"
+    },
+
+    {
+        names: ["pinterest", "pinterest.com"],
+        icon: "pinterest",
+        title: "Pinterest"
+    },
+
+    {
+        names: ["linkedin", "linkedin.com"],
+        icon: "linkedin",
+        title: "LinkedIn"
+    },
+
+    {
+        names: ["telegram", "telegram.org", "t.me"],
+        icon: "telegram",
+        title: "Telegram"
+    },
+
+
+    /* Development / Cybersecurity */
+
+    {
+        names: ["github", "github.com"],
+        icon: "github",
+        title: "GitHub"
+    },
+
+    {
+        names: ["gitlab", "gitlab.com"],
+        icon: "gitlab",
+        title: "GitLab"
+    },
+
+    {
+        names: ["bitbucket", "bitbucket.org"],
+        icon: "bitbucket",
+        title: "Bitbucket"
+    },
+
+    {
+        names: [
+            "stackoverflow",
+            "stack overflow",
+            "stackoverflow.com"
+        ],
+        icon: "stackoverflow",
+        title: "Stack Overflow"
+    },
+
+    {
+        names: [
+            "tryhackme",
+            "try hack me",
+            "tryhackme.com"
+        ],
+        icon: "tryhackme",
+        title: "TryHackMe"
+    },
+
+    {
+        names: [
+            "hackthebox",
+            "hack the box",
+            "htb",
+            "hackthebox.com"
+        ],
+        icon: "hackthebox",
+        title: "Hack The Box"
+    },
+
+    {
+        names: ["docker", "docker.com"],
+        icon: "docker",
+        title: "Docker"
+    },
+
+    {
+        names: ["cloudflare", "cloudflare.com"],
+        icon: "cloudflare",
+        title: "Cloudflare"
+    },
+
+
+    /* Google */
+
+    {
+        names: ["google", "google.com"],
+        icon: "google",
+        title: "Google"
+    },
+
+    {
+        names: [
+            "gmail",
+            "gmail.com",
+            "mail.google.com"
+        ],
+        icon: "gmail",
+        title: "Gmail"
+    },
+
+    {
+        names: ["youtube", "youtube.com"],
+        icon: "youtube",
+        title: "YouTube"
+    },
+
+    {
+        names: [
+            "google drive",
+            "drive.google.com"
+        ],
+        icon: "googledrive",
+        title: "Google Drive"
+    },
+
+
+    /* Microsoft */
+
+    {
+        names: ["microsoft", "microsoft.com"],
+        icon: "microsoft",
+        title: "Microsoft"
+    },
+
+    {
+        names: ["outlook", "outlook.com"],
+        icon: "microsoftoutlook",
+        title: "Outlook"
+    },
+
+    {
+        names: [
+            "onedrive",
+            "one drive",
+            "onedrive.com"
+        ],
+        icon: "microsoftonedrive",
+        title: "OneDrive"
+    },
+
+    {
+        names: [
+            "azure",
+            "azure.com",
+            "portal.azure.com"
+        ],
+        icon: "microsoftazure",
+        title: "Microsoft Azure"
+    },
+
+
+    /* Apple */
+
+    {
+        names: ["apple", "apple.com"],
+        icon: "apple",
+        title: "Apple"
+    },
+
+    {
+        names: ["icloud", "icloud.com"],
+        icon: "icloud",
+        title: "iCloud"
+    },
+
+
+    /* Entertainment */
+
+    {
+        names: ["spotify", "spotify.com"],
+        icon: "spotify",
+        title: "Spotify"
+    },
+
+    {
+        names: ["netflix", "netflix.com"],
+        icon: "netflix",
+        title: "Netflix"
+    },
+
+    {
+        names: ["twitch", "twitch.tv"],
+        icon: "twitch",
+        title: "Twitch"
+    },
+
+    {
+        names: [
+            "steam",
+            "steampowered.com",
+            "steamcommunity.com"
+        ],
+        icon: "steam",
+        title: "Steam"
+    },
+
+    {
+        names: [
+            "epic games",
+            "epicgames",
+            "epicgames.com"
+        ],
+        icon: "epicgames",
+        title: "Epic Games"
+    },
+
+
+    /* Work / Productivity */
+
+    {
+        names: ["discord", "discord.com"],
+        icon: "discord",
+        title: "Discord"
+    },
+
+    {
+        names: ["slack", "slack.com"],
+        icon: "slack",
+        title: "Slack"
+    },
+
+    {
+        names: ["zoom", "zoom.us"],
+        icon: "zoom",
+        title: "Zoom"
+    },
+
+    {
+        names: ["notion", "notion.so"],
+        icon: "notion",
+        title: "Notion"
+    },
+
+    {
+        names: ["canva", "canva.com"],
+        icon: "canva",
+        title: "Canva"
+    },
+
+    {
+        names: ["dropbox", "dropbox.com"],
+        icon: "dropbox",
+        title: "Dropbox"
+    },
+
+
+    /* Shopping / Payments */
+
+    {
+        names: ["amazon", "amazon.com"],
+        icon: "amazon",
+        title: "Amazon"
+    },
+
+    {
+        names: ["ebay", "ebay.com"],
+        icon: "ebay",
+        title: "eBay"
+    },
+
+    {
+        names: ["paypal", "paypal.com"],
+        icon: "paypal",
+        title: "PayPal"
+    },
+
+
+    /* Education */
+
+    {
+        names: ["coursera", "coursera.org"],
+        icon: "coursera",
+        title: "Coursera"
+    },
+
+    {
+        names: ["udemy", "udemy.com"],
+        icon: "udemy",
+        title: "Udemy"
+    },
+
+    {
+        names: ["medium", "medium.com"],
+        icon: "medium",
+        title: "Medium"
+    },
+
+    {
+        names: ["quora", "quora.com"],
+        icon: "quora",
+        title: "Quora"
+    },
+
+
+    /* AI */
+
+    {
+        names: [
+            "chatgpt",
+            "chat.openai.com",
+            "chatgpt.com"
+        ],
+        icon: "openai",
+        title: "ChatGPT"
+    },
+
+    {
+        names: ["openai", "openai.com"],
+        icon: "openai",
+        title: "OpenAI"
+    },
+
+
+    /* Cloud */
+
+    {
+        names: [
+            "aws",
+            "amazon web services",
+            "aws.amazon.com"
+        ],
+        icon: "amazonwebservices",
+        title: "AWS"
+    },
+
+
+    /* Email */
+
+    {
+        names: [
+            "proton",
+            "protonmail",
+            "proton.me",
+            "protonmail.com"
+        ],
+        icon: "protonmail",
+        title: "Proton Mail"
+    }
+
+];
+
+
+/* =====================================================
+   FIND WEBSITE LOGO
+   ===================================================== */
+
+function findWebsiteLogo(website) {
+
+    const value = website
+        .toLowerCase()
+        .trim()
+        .replace(/^https?:\/\//, "")
+        .replace(/^www\./, "")
+        .replace(/\/$/, "");
+
+
+    for (const service of websiteLogos) {
+
+        const found =
+            service.names.some(
+                function(name) {
+
+                    const cleanName =
+                        name.toLowerCase();
+
+                    return (
+                        value === cleanName ||
+                        value.startsWith(
+                            cleanName + "/"
+                        ) ||
+                        value.includes(cleanName)
+                    );
+
+                }
+            );
+
+
+        if (found) {
+
+            return service;
+
+        }
+
+    }
+
+
+    return null;
+}
+
+
+/* =====================================================
+   LOAD DASHBOARD LOGOS
+   ===================================================== */
+
+document.querySelectorAll(
+    ".smart-dashboard-logo"
+).forEach(
+    function(container) {
+
+        const website =
+            container.dataset.website;
+
+
+        const service =
+            findWebsiteLogo(website);
+
+
+        /* Unknown website */
+
+        if (!service) {
+
+            container.title =
+                website;
+
+            return;
+
+        }
+
+
+        const image =
+            document.createElement("img");
+
+
+        image.src =
+            `https://cdn.simpleicons.org/${service.icon}`;
+
+
+        image.alt =
+            service.title + " logo";
+
+
+        image.title =
+            service.title;
+
+
+        image.loading =
+            "lazy";
+
+
+        /* Fallback */
+
+        image.onerror =
+            function() {
+
+                container.innerHTML =
+                    '<span class="default-site-icon">🌐</span>';
+
+            };
+
+
+        container.innerHTML =
+            "";
+
+
+        container.appendChild(
+            image
+        );
+
+    }
+);
+
+</script>
+<div id="sessionWarning"
+     style="display:none;">
+
+    ⚠️ Your session will lock in
+    <strong id="sessionCountdown">30</strong>
+    seconds due to inactivity.
+
+</div>
+
+<script>
+
+const SESSION_TIMEOUT = 120;
+const WARNING_TIME = 30;
+
+let lastActivity = Date.now();
+
+const warningBox =
+    document.getElementById("sessionWarning");
+
+const countdown =
+    document.getElementById("sessionCountdown");
+
+
+function resetActivity() {
+
+    lastActivity = Date.now();
+
+    if (warningBox) {
+
+        warningBox.style.display =
+            "none";
+
+    }
+
+}
+
+
+["click", "keydown", "mousemove", "scroll", "touchstart"]
+.forEach(function(eventName) {
+
+    document.addEventListener(
+        eventName,
+        resetActivity,
+        { passive: true }
+    );
+
+});
+
+
+setInterval(function() {
+
+    const inactiveSeconds =
+        Math.floor(
+            (Date.now() - lastActivity) / 1000
+        );
+
+
+    const remaining =
+        SESSION_TIMEOUT - inactiveSeconds;
+
+
+    if (
+        remaining <= WARNING_TIME &&
+        remaining > 0
+    ) {
+
+        if (warningBox) {
+
+            warningBox.style.display =
+                "block";
+
+        }
+
+
+        if (countdown) {
+
+            countdown.textContent =
+                remaining;
+
+        }
+
+    }
+
+
+    if (remaining <= 0) {
+
+        window.location.href =
+            "/login?expired=1";
+
+    }
+
+}, 1000);
+
+</script>
+
+</body>
+
+</html>
